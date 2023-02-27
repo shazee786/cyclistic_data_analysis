@@ -1,0 +1,853 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Cyclistic Dataset Integrity Report</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="6fa13471-ff9b-4ac6-8fe2-14d803e40368" class="page sans"><header><h1 class="page-title">Cyclistic Dataset Integrity Report</h1></header><div class="page-body"><p id="73d52a1c-fed9-4361-9cec-2ecf4c87f5a3" class=""><strong>by Avaes Shah</strong></p><p id="adbbdb44-ae4e-448e-8446-9ad6ac117e23" class="">This report documents the stages carried out to test the integrity and credibility of the dataset and the results.</p><h2 id="e912440c-1b9b-4de3-9f8e-717c1301010e" class="block-color-orange_background">Creating a dataset in Google BigQuery</h2><p id="2eb0f3ce-56ea-4ab9-aec0-88791e8c16fd" class=""><strong>Dataset Name :</strong> cyclistic_trip_data
+<strong>Dataset ID :</strong> my-project-1-359120.cyclistic_trip_data</p><p id="09f4e40f-f25f-4d32-9a60-706d4f56c8d1" class="">Upload the CSV files to the dataset in BigQuery</p><p id="d783b36f-cb64-4946-a6f6-0bae17dcab4c" class="">The following CSV files have been uploaded to the BigQuery dataset:</p><pre id="eba00d5f-8c45-4e38-9505-a5b69fd7f6f5" class="code"><code>05/02/2023  15:31        19,011,955 202201-divvy-tripdata.csv
+05/02/2023  15:30        21,132,516 202202-divvy-tripdata.csv
+05/02/2023  15:30        51,745,473 202203-divvy-tripdata.csv
+05/02/2023  15:30        66,909,087 202204-divvy-tripdata.csv
+05/02/2023  15:30       117,534,432 202205-divvy-tripdata.csv
+05/02/2023  15:29       143,592,643 202206-divvy-tripdata.csv
+05/02/2023  15:29       152,888,753 202207-divvy-tripdata.csv
+05/02/2023  15:29       145,559,436 202208-divvy-tripdata.csv
+05/02/2023  15:29       141,449,526 202209-divvy-tripdata.csv
+05/02/2023  15:28       111,915,287 202210-divvy-tripdata.csv
+05/02/2023  15:28        67,939,634 202211-divvy-tripdata.csv
+05/02/2023  15:28        36,466,595 202212-divvy-tripdata.csv</code></pre><p id="31ebc530-2e96-477a-b253-93fe98f4f4f2" class="">each file represents a separate month. I have created a separate table for each month labelled as follows:</p><pre id="ce4f9ac0-4a65-4a99-ba7f-11384cf2e361" class="code"><code>trip_raw_jan_2022
+trip_raw_feb_2022
+trip_raw_mar_2022
+...
+trip_raw_dec_2022</code></pre><p id="066e7d82-5f8d-4b31-b946-b659294f6635" class="">
+</p><ul id="70f383ad-9685-49a1-8a64-aa08d9ee2558" class="toggle"><li><details open=""><summary><strong>Uploading File from Google Drive URL Error : Resolved</strong></summary><p id="85f5671d-99bf-4e84-b7c9-c310615ccf34" class="">Files greater than 100 MB have to uploaded via Google Drive (due 100 MB size limit when uploading via local drive to BigQuery)</p><p id="4a167483-026b-4e40-b379-3afd02f9ae4b" class="">I will upload the entire CSV raw data files to Google Drive under the directory : /Google Data Analytics Certificate/Cyclistic/Raw Data/</p><p id="efd8bc76-f428-476c-bcca-d584e9d9801d" class=""><strong><strong><strong><strong><strong>issue</strong></strong></strong></strong></strong>: I had to use a particular format when uploading my file URL:
+the format requested by BigQuery : <a href="https://drive.google.com/open?id=">https://drive.google.com/open?id=</a>[file id]
+</p><p id="c4be8be0-4108-4406-bb3b-fcd9ed7b6e50" class="">Format of Google Drive URL : <a href="https://drive.google.com/file/d/1QlEFfnqhjlgpZT3ZmSXhqhxWuwB9Ya16/view?usp=share_link">https://drive.google.com/file/d/1QlEFfnqhjlgpZT3ZmSXhqhxWuwB9Ya16/view?usp=share_link</a></p><p id="45f83246-3cf6-453c-a9ee-6ff125b299c1" class="">The serialized portion of the link is the file id for the CSV file on Google Drive.</p><p id="b799a084-55e0-4be8-9958-538ecbac4030" class="">Therefore the link to the file (for June) is:</p><p id="11b9d7a0-3be7-4b04-bb4f-e68e8a79a688" class=""><a href="https://drive.google.com/open?id=1QlEFfnqhjlgpZT3ZmSXhqhxWuwB9Ya16">https://drive.google.com/open?id=1QlEFfnqhjlgpZT3ZmSXhqhxWuwB9Ya16</a>
+</p><p id="e3ea2f0f-f8e1-40d5-b52a-7737ec2a63e5" class=""><strong>Note: Permissions for the Google Drive File is set to “Viewer”</strong></p><p id="36d11b37-db44-429d-8659-44a3df7f2da4" class="">The remaining CSV files have been uploaded into their respective directories under the cyclistic_trip_data dataset.</p></details></li></ul><p id="208cd756-8edb-4d53-b7a0-281550e04b33" class="">
+</p><h3 id="6637b62d-db8f-4b1d-8ce5-e5578e925b03" class="block-color-teal_background"><strong>Aggregating the twelve tables into one large table</strong></h3><p id="b4b36bca-d858-45a8-b1a7-8eef2ec8e4c8" class="">There currently is a table for each month, which would be time consuming to clean. By combining the 12 tables into one large table would significantly reduce the time taken to test and clean the dataset.</p><pre id="32b617ba-0934-426c-a7ef-95bfc7cad333" class="code"><code>-- combine all the tables into one dataset
+
+select *
+from `my-project-1-359120.cyclistic_trip_data.trip_raw_jan_2022`
+
+union all
+
+select *
+from `my-project-1-359120.cyclistic_trip_data.trip_raw_feb_2022`
+
+union all
+
+-- ... for all tables ...
+
+select *
+from `my-project-1-359120.cyclistic_trip_data.trip_raw_dec_2022`
+
+-- the results of this query is saved into a one single table labeled trip_raw_2022
+-- there are currently 5667717 records in total</code></pre><h2 id="8f233e84-0ae0-42d5-865f-67c32221841a" class="block-color-orange_background">Field Validation &amp; Testing</h2><h3 id="9d2101ed-408b-4b8b-bcf8-2c5cdfaa71a0" class="block-color-teal_background">Table Structure</h3><p id="544cee49-ea30-4314-b94f-f31e9242e73f" class="">Each table has the following fields and types, I got this by running the following SQL query on the trip_raw_jan_2022 table:</p><pre id="f653d5d2-e9cf-4811-8ba9-ad77665d8fcb" class="code"><code>SELECT * FROM my-project-1-359120.cyclistic_trip_data.INFORMATION_SCHEMA.TABLES
+where table_name = &quot;trip_raw_jan_2022&quot;;</code></pre><p id="71ad16f9-3dcc-4926-9fb1-24130fe33bab" class="">The data is organised as 13 columns where each row (observation) represents one bike transaction.</p><p id="d27222f0-3700-4214-b237-c4d1453b9300" class="">A transaction is when a rider takes a bike from the start station and returns it to an end station. This transaction generates data which populates one row in a table.</p><p id="17bdf00f-b6d0-492f-8065-4b75b3ce92f9" class="">A unique ride_id is generated per transaction (&quot;hire&quot;) along with the following self-explanatory fields:</p><pre id="e2fa36b0-5142-4595-87f1-c0828234baa5" class="code"><code>-- Field Names
+ride_id STRING,
+rideable_type STRING,
+started_at TIMESTAMP,
+ended_at TIMESTAMP,
+start_station_name STRING,
+start_station_id STRING,
+end_station_name STRING,
+end_station_id STRING,
+start_lat FLOAT64,
+start_lng FLOAT64,
+end_lat FLOAT64,
+end_lng FLOAT64,
+member_casual STRING</code></pre><p id="3a44b2a9-f8e7-4963-9cf9-a78d644eba62" class="">
+</p><p id="82a8c3ba-5e96-4819-86b8-7bc345c91c93" class=""><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>Number of records</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></p><pre id="65d54f83-5f15-415c-9830-40c2b791c2f6" class="code"><code>select count(*) as num_of_records,
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022</code></pre><p id="94c10426-7f14-401a-9799-b1e4abc057b3" class="">Result: There are <span style="border-bottom:0.05em solid"><strong>5667717</strong></span><strong> </strong>records for the year 2022.</p><h3 id="72c9a15f-d687-4498-b6eb-907daf4e26bc" class="block-color-teal_background">Field: ride_id (STRING)</h3><p id="aef21318-b1c8-47b7-9511-c9a36be2d924" class="">The ride_id is the primary key of the database. Each time a customer uses a bike a unique ride_id is created. Any records containing duplicate ride_ids should be removed. To test for duplicates we use the following query:</p><pre id="4f81fc3d-cb0b-476d-9d46-25479959a0d9" class="code"><code>select ride_id, count(ride_id)
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+group by ride_id
+having count(ride_id) &gt; 1</code></pre><p id="cd641191-8a86-49fd-acc4-1faafe4b01e0" class="">Result : No results
+Comments: There are no duplicate records present, which is good for data integrity of the dataset.</p><p id="cddc53c3-aa91-4ebc-b9a1-1836be64040b" class="">We now check for any null (missing values) in the ride_id column:</p><pre id="12dfe637-81a6-475a-b37e-e8f65d3cdf5e" class="code"><code>select ride_id
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where ride_id is null;</code></pre><p id="28e60a4f-6117-4acd-ad40-41ce4ae56e02" class="">Result: none
+Comments: No missing values.</p><h3 id="89e9f2f6-afe3-4fcd-9381-ada4cbba1517" class="block-color-teal_background">Field: rideable_type (STRING)</h3><p id="49197781-4474-4fb8-98fb-23e8ce9f1200" class="">Check for any missing (NULL) values:</p><pre id="588838e5-5901-46cc-94df-b56e527de578" class="code"><code>select *
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where rideable_type is NULL;</code></pre><p id="0e3acf19-a387-4660-9911-360052d46f75" class="">Result : None</p><p id="41a0559b-7507-4436-93d3-9aebc00c4904" class="">Check for white spaces:</p><pre id="4dfc4333-f1b2-4928-bf9b-d9133ceaf6fc" class="code"><code>select distinct rideable_type
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022</code></pre><p id="c9b5cc38-044b-44e8-8a93-d46c3599a5b4" class="">Result:</p><pre id="05414e0d-53ab-447e-a973-5ae9eb4bf3d5" class="code"><code>electric_bike	
+classic_bike
+docked_bike</code></pre><p id="9d7e1c61-e550-4820-8ac9-ebb002d48010" class="">Comments: If any of these results were repeated that would indicate white spaces present. No white spaces or spelling errors present in this field.</p><h3 id="0fb3b3e2-4934-4a13-9da4-b0c3cfb4424c" class="block-color-teal_background">Field: started_at (TIMESTAMP)</h3><p id="ab56cf2e-6d83-48c3-b12c-750d830c4766" class="">Here we have the date and time combined. The format is YYYY-MM-DD HH:MM:SS UTC (Coordinated Universal Time)</p><p id="c9acf61a-4f46-41b7-9b5b-0abe59b72241" class="">Check for missing (NULL) values:</p><pre id="85a164d6-3eac-4b8d-90dd-9194365c0e5d" class="code"><code>select *
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where started_at is NULL;</code></pre><p id="d0dff90d-e086-490d-93f5-1193960f5ef0" class="">Result: None</p><p id="5322391a-1663-4c2d-a6af-b222451b568c" class="">Check the date and time range</p><pre id="4ddc2c3b-7f98-4f22-8ff6-20575e75da7c" class="code"><code>select
+min(started_at) as start_date,
+max(started_at) as end_date
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022</code></pre><p id="50dad85f-6a7a-481e-a8b8-633d086e2706" class="">Result:</p><pre id="b9533c29-7e04-499f-870b-34b3061ff73a" class="code"><code>start_date: 2022-01-01 00:00:05 UTC
+end_date: 2022-12-31 23:59:26 UTC</code></pre><p id="e157820f-ffaf-4ec6-bd77-22b60800c1b5" class="">Comment: This complies with the date range we have selected.</p><h3 id="e0724cc3-2451-44bb-a1ec-e92266977a99" class="block-color-teal_background">Field: ended_at (TIMESTAMP) </h3><p id="cde04d81-d6bd-4234-9aab-f121f1cebf81" class="">Check for null values:</p><pre id="7e6af526-6651-46a9-80b1-68853c66b8d0" class="code"><code>select *
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where ended_at is NULL;</code></pre><p id="7340f66a-67ba-46ff-ab1e-9e094b4b561c" class="">Result: None</p><p id="166c21ba-d086-418e-91b6-c23ef6530d04" class="">Date-time range query:</p><pre id="abe2369b-beae-475a-adbf-2ceb0e660bd6" class="code"><code>select
+min(ended_at) as start_date,
+max(ended_at) as end_date
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022</code></pre><p id="2aec2139-f1a7-4a3f-bd9f-089928dd9098" class="">Result:</p><pre id="9d329d60-1261-4acd-9aea-952bfb8f6019" class="code"><code>start_date: 2022-01-01 00:01:48 UTC
+end_date: 2023-01-02 04:56:45 UTC</code></pre><p id="46372fa3-88b9-4a95-b24c-0179ace333cc" class="">Comment: The end date extends into the 2nd January 2023. We shall keep this part of the dataset.</p><h3 id="6ac589ca-286e-4c25-bed8-e3500cb56ac2" class="block-color-teal_background">Field: start_station_name (STRING)</h3><p id="ca474d86-c92a-472c-bdcf-79569a24e4a2" class="">Upon visual inspection of the first 200 records, there is missing values for this field, however we still have the start station longitude and latitude information. The start_stationn_id for the first 200 appear to be missing too.</p><p id="53cfafca-ffc8-46e6-b004-f135b2db874a" class="">First we check how many values for this field are missing out of 5667717 records:</p><pre id="c02bb46e-4220-4234-a82f-ce69b145176e" class="code"><code>select count(*)
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where start_station_name is NULL and start_station_id is null;</code></pre><p id="2bde3aa7-70da-4e61-b0ec-f0725ec19f66" class="">Result: 833064 (approx. 15% of the dataset have missing start station names AND start station ids)</p><p id="d1443508-e399-41c8-99bd-4b1bcb619eda" class="">We shall also check if these stations have their GPS coorfinates missing too:</p><pre id="dcce0fac-a1b8-487d-b938-554b3f0e963e" class="code"><code>select count(*)
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where start_station_name is NULL and start_station_id is null and start_lng is null;</code></pre><p id="62dae6d1-1081-4eab-9ea6-209d02b4ef8c" class="">Result: 0 (results for both longitude and latitude)
+Comments: The GPS coordinates for the start stations are available.</p><p id="1ff15bbf-3cf0-497d-8cf2-97e7d710bc99" class="">There appears to be quite a lot of missing values. We can fill these missing values by running a query that will bring up all the start station names, there ids and their GPS information.</p><pre id="614a90f8-1463-421b-8e84-cfc1b4424df1" class="code"><code>select
+distinct start_station_name,
+start_station_id
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where start_station_name is not null
+order by start_station_name ASC;</code></pre><p id="fe2b64ec-1f2e-4f1e-bfed-c64dd22a166c" class="">Result: 1692 records
+This does not appear to be correct, as the project brief mentioned that there are around 692 stations. The station names may have to be cleaned too. We will check this during the cleaning stage of the process.</p><p id="4972bba8-81b0-4afc-96a4-7754baa25718" class="">Notwithstanding the number station disparity, when I try and obtain the GPS coordinates for these stations my results differ as follows:</p><pre id="70926628-b8f3-4211-a7c2-c71395772812" class="code"><code>select
+distinct start_station_name,
+start_station_id,
+round(start_lat, 2) as latitude,
+round(start_lng, 2) as longitude
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where start_station_name is not null
+order by start_station_name ASC;</code></pre><p id="234f2696-f7cc-4d51-a310-c1f5c7d872d2" class="">Result: 4033 records</p><p id="ea38a7e7-1724-4824-8822-925554ad5cca" class="">Comments: Why ? The GPS coordinates for a station might vary slightly causing repeated a station to appear more than once on the list, hence the larger number of records. We therefore cannot rely on GPS coordinates to identify the missing stations but we need to examine the business task again to see if the start and end station names are relevant to our analysis.</p><p id="a86b2c65-1c32-4563-93e7-cc6fd1cc5695" class=""><strong>Business task: How do annual members and causal riders use Cyclistic bikes differently?</strong></p><p id="18417c6a-5cc9-43c1-94b8-73bc5c7f1f08" class="">If we attempt to utilise the start and end station names it would mean we would have to fill in the missing data. This will allow us to identify where the bikes were taken from and where they have been returned. This information can be obtained independently through GPS information alone. </p><p id="30fae213-9eb3-4426-b401-2ddd2cd87284" class="">We can then omit the need for the names of the start and end stations and their ids as we have the GPS data which can be plotted in Tableau.</p><p id="87ad7526-a65c-4d74-8b65-b50e160f3d2c" class="block-color-yellow_background"><strong>This matter has to be flagged to the stakeholders:</strong> </p><ul id="c2221ede-b8fd-4b6c-bba3-fdd513ea29b9" class="block-color-yellow_background bulleted-list"><li style="list-style-type:disc">Why are around 15% of 2022 records missing the start station name and id ?</li></ul><h3 id="e2793b94-c28a-4890-854d-9dc8ab83268c" class="block-color-teal_background">Field: start_station_id (STRING)</h3><p id="cd8969e2-1f61-4663-ba19-257678e5a9e0" class="">Missing values:</p><pre id="1a151082-2dd5-4c66-8c6e-fec1e0900295" class="code"><code>select count(*)
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where start_station_id is null;</code></pre><p id="7a61d9b3-6f3f-4b2b-9fa5-965f05341ccd" class="">Number of missing values: 833064</p><p id="e58b9449-4e5d-4042-9560-bdb7c15c0846" class="">Again, that is the exact number missing as the start_station_name.</p><p id="2ff58327-7e59-4a5a-9e2c-d6d1e223b136" class="">The number of unique station ids:</p><pre id="48bc889d-2719-4be1-a480-f087c6cd68d2" class="code"><code>select count(distinct trim(start_station_id))
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022</code></pre><p id="2342c409-e551-4c39-b871-38e9f723bf42" class="">Result: 1313</p><p id="e5971c26-eed5-4d0a-9276-2567f9d461b9" class="">Comments: The disparity stands, the station names and station ids will need to be cleaned. We cannot do that in BigQuery due to the licencing restrictions which does not allow manipulation of data in the tables (updating, amending etc) which is why we will add this to the report and then carry out the cleaning process in R.</p><h3 id="405e81d5-03ff-4dd7-a5cb-b81c05b55ab3" class="block-color-teal_background">Field: end_station_name (STRING)</h3><p id="7f9ba87c-6bf8-4ee9-8b79-4d9aae50cc97" class="">Check for missing values</p><pre id="9a9b8a09-8830-435a-a0ea-d89149de6734" class="code"><code>select count(*) as missing_values
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where end_station_name is NULL;</code></pre><p id="d24490ea-1fb4-443c-9fcf-c21d8a3407be" class="">Result: 892742</p><p id="ce547616-2758-44d1-92ef-daf9730d29eb" class="">Comment: this represents around 16% of the dataset.</p><p id="d0407247-05e8-4486-b4c7-9c77ae65401b" class="">Action: The missing station data will have to be flagged with upper management for investigation.</p><p id="a1a13b19-ef29-4d42-a0c8-85e38dfa1adf" class="">Check how many unique end station names there are:</p><pre id="e56bb7fc-e2db-4baa-a98f-aed4f2652f0a" class="code"><code>select count(distinct trim(end_station_name)),
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where end_station_name is not NULL;</code></pre><p id="ad30b396-5144-44af-9aeb-6adaabbca50f" class="">Result: 1692</p><p id="a1f17fb2-ee86-43b4-afbf-56124ef51d76" class="">Comment: We see a discrepancy appear here due to the varying GPS coordinates for one station.</p><h3 id="4b1c53af-e662-42ed-839b-40abb48a6e2d" class="block-color-teal_background">Field: end_station_id (String)</h3><p id="949ed4c6-7a6d-48d1-8f7d-88caf330e894" class="">Check for missing end_station_ids :</p><pre id="58a46b89-af8e-41eb-a13d-2bf9b445bfba" class="code"><code>select count(*)
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where end_station_id is NULL;</code></pre><p id="14b22cf7-934b-414c-a39f-271cb922922d" class="">Result: 892742
+Comment: This is the same amount of data missing as the end station names.</p><p id="b8ca3642-faf5-4031-89e3-ccf7dfab804c" class="">Check to see how many unique end station ids are present:</p><pre id="355820ca-4a74-4e38-9ce1-4c8e42cbe6b5" class="code"><code>select count(distinct trim(end_station_id)),
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where end_station_id is not NULL;</code></pre><p id="e1e29b34-29c1-4189-9301-50dc6dcdd536" class="">Result: 1317</p><p id="b0806a57-d9bb-4e3c-a56c-5c121b69aaf3" class="">Comment: These columns will have to be cleaned via R Studio.</p><h3 id="4361b73f-24a4-42ca-b15e-c783252b4480" class="block-color-teal_background">Field: start_lat (Float)</h3><p id="b6fd02a6-9b7c-4309-a224-6c07bec5b2d0" class="">Find missing data :</p><pre id="550aa25f-9d6f-4701-96f9-96445143df9a" class="code"><code>select count(*)
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where start_lat is NULL;</code></pre><p id="9a7d4a26-c932-4b60-875a-32f4bbfa23f3" class="">Result: 0
+Comments: No missing data</p><p id="2f25d8aa-e445-468d-bba4-981224781b7f" class="">Range check - latitude coordinates should be between -90 to 90,
+anything outside this range is an error.</p><pre id="9bbc753d-dd33-48bd-8225-98d9d727d5d9" class="code"><code>select
+start_lat
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where start_lat NOT BETWEEN -90.00 AND 90.00</code></pre><p id="81a156fc-062b-4db8-9138-995772384141" class="">Result: 0
+Comments: The start latitude field is within range.</p><p id="6f1ac795-371b-4427-b98e-a10c80f905d8" class="">Check the min and max values for latitude:</p><pre id="83c77fae-f9cd-4a3d-95cc-de6893fe48ef" class="code"><code>select
+min(start_lat) as min_start_lat,
+max(start_lat) as max_start_lat
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022</code></pre><p id="8d274ab1-7ce5-4bc8-aaa3-b1a68ad8bfa7" class="">Result:</p><pre id="21f5f536-09f0-4bac-89f1-727f9eb264fe" class="code"><code>min_start_lat: 41.64
+max_start_lat: 45.635034323</code></pre><p id="2e3a2578-0531-4018-bfd1-1c6c3bd212b8" class="">Comments: These values correlate for the GPS coordinates for Chicago (IL) state</p><h3 id="69fcc772-e691-4c89-b0b2-b5b3c70b4d0c" class="block-color-teal_background">Field: start_lng (Float)</h3><p id="61e21a41-1b2a-4052-8b98-b5b84cb5b7d9" class="">Find missing values:</p><pre id="8bfa1009-147e-4441-bdbf-eb73a16e69ac" class="code"><code>select count(*)
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where start_lng is NULL;</code></pre><p id="dcdd0fcd-9395-420e-85ff-789cedb2f8c8" class="">Result: 0
+Comments: No missing values</p><p id="5df0ff7c-9500-4716-b631-73e43c3e13f0" class="">Check the range, numerical range for longitude is between -180 to 180</p><pre id="05291ea3-941d-4f88-89fe-66c442c6cb4b" class="code"><code>select
+start_lng
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where start_lng NOT BETWEEN -180.00 AND 180.00</code></pre><p id="73627113-eb45-4db9-b549-ac254e598f7e" class="">Result: 0 (no data)
+Comments: The start longitude values are within the correct range.</p><p id="497a1ba2-32c4-44f4-a5a5-f3b39a5d59be" class="">Check the min and max values for longitude</p><pre id="b762f29e-4833-469c-8781-3ae20ee4bf10" class="code"><code>select
+min(start_lng) as min_start_lng,
+max(start_lng) as max_start_lng
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022</code></pre><p id="f20b20e2-f9b0-4237-ad88-c8805f889e4c" class="">Result:</p><pre id="656dc729-adb8-4745-bead-3c33b0d5c14f" class="code"><code>min_start_lng: -87.84
+max_start_lng: -73.79647696</code></pre><p id="4de8dfc7-67fd-4e38-b361-ad8303c5a57b" class="">Comments: These values correlate for the GPS coordinates for the Chicago (IL) state</p><h3 id="7f7e62c9-84d3-4278-a9e7-378427718b76" class="block-color-teal_background">Field: end_lat (float)</h3><p id="7b38d238-09aa-4d37-a87e-675cc0f04a61" class="">Missing Values (Nulls)</p><pre id="ac3a36a6-2c73-4504-a120-1dcd82dcec97" class="code"><code>select count(*)
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where end_lat is NULL;</code></pre><p id="8b2158f2-1cb2-4b36-b014-22690b0097df" class="">Result : 5858
+Comments: there appears to be missing values for the GPS coordinates. </p><p id="a43d9dec-0363-44ee-ada1-a10bc2ba9919" class="">I checked the end station names and ids for the records missing the end latitude data:</p><pre id="6e9e8a38-2b41-45dc-8610-7ea197e898f4" class="code"><code>select *
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where end_lng is NULL and end_station_name is null and end_station_id is null;</code></pre><p id="5d7116a5-9073-441b-b1d2-f0d2f546f90e" class="">Result: 5858 records</p><p id="cf27c775-1906-45a0-86eb-12a5094f5d1d" class="">Comments: it appears that all 5858 have missing end station id/names and end station GPS coordinates but the start station metrics are present. These records will have to be removed as they cannot be relied upon because we do not know where the customer would have returned the bikes. This will need to be flagged up with the stakeholders.</p><p id="d59b4b7c-014a-46f0-b467-fa80e4eeb01c" class="block-color-yellow_background"><strong>Action : The records with missing end station data will be removed from the raw dataset </strong></p><p id="d241b097-0672-47d1-88a6-ee6bf540edca" class="">Check for min and max values for the end latitude:</p><pre id="fa9fcfef-2b55-4764-ab1a-211b568a33ad" class="code"><code>select
+min(end_lat) as min_end_lat,
+max(end_lat) as max_end_lat
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where end_lat is not null;</code></pre><p id="b8ff787f-babc-4e1b-8cfe-9d1e5480949c" class="">Result:</p><pre id="fc4b69e6-1b5d-45d6-875a-88f628eb52f7" class="code"><code>min_end_lat: 0.0
+max_end_lat: 42.3</code></pre><p id="34e9b6d9-95b9-4010-8d8e-7b7228a3cca3" class="">Comments: The minimum latitude appears to be 0.0 which needs to be checked, this appears to be an error.</p><p id="dfc1ae75-5ebc-47b5-92b0-7c2f29cd7e07" class="">Checking the distinct range of values for end_lat:</p><p id="345ef98f-9754-4380-8652-70a012c85514" class="">Check the distinct values for any errors:</p><pre id="fd1aecd9-5ef2-4cda-94c2-9c4cd88ee3c1" class="code"><code>select *
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where end_lat = 0.0</code></pre><p id="46a117de-9679-41da-acba-e56c35de127d" class="">Result: 8 records have come to notice that have 0.0 for their end_lat and end_lng. These records could be deemed as error in the data, however they all do have the end station name:  Green St &amp; Madison Ave*. It would be possible to locate the average value for the GPS coordinates for this station and update the records with them.</p><p id="0313bd1b-73d9-4855-866a-9abffca87663" class="">We need to find the average end longitude and latitude for Green St &amp; Madison Ave*.</p><pre id="be94b59f-106a-4d48-b040-d95068593e2f" class="code"><code>select
+avg(end_lat) as avg_end_lat,
+avg(end_lng) as avg_end_lng
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where end_station_name = &#x27;Green St &amp; Madison Ave*&#x27; and end_lat != 0.0 and end_lng != 0.0;</code></pre><p id="0d743679-de35-41e1-9715-beefad99a8d4" class="">Result:</p><pre id="4036a8bf-27f3-46a1-8fe2-9e97d3be585e" class="code"><code>avg_end_lat:41.881827586351044
+avg_end_lng: -87.648832371179864</code></pre><p id="f9c7ed5f-0e18-4554-b197-b17884a3432b" class="">We can now update the dataset with these values within R Studio</p><p id="2f697207-c437-41c6-8345-c7f5866abdfd" class="block-color-yellow_background"><strong>Action: </strong></p><ul id="ca188d9f-c020-4b1f-a3d8-213ff2040346" class="block-color-yellow_background bulleted-list"><li style="list-style-type:disc"><mark class="highlight-yellow_background"><strong>Use R Studio to replace 0.0 values for end latitude and end longitude for Green St &amp; Madison Ave* with average GPS values calculated about.</strong></mark></li></ul><ul id="a6154e57-e1fb-4aac-bc78-074b2b6825ba" class="block-color-yellow_background bulleted-list"><li style="list-style-type:disc"><mark class="highlight-yellow_background"><strong>Flag issue to stakeholders for investigation</strong></mark></li></ul><p id="8fafb3f6-60e2-4178-8a6f-b5ece1ebfad0" class="">The following query would have been used if there were no restrictions on the free licence in BigQuery:</p><pre id="6ba822eb-6c7b-4609-9c40-a472f5c65eb1" class="code"><code>update
+my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+set end_lat = 41.881827586351044,
+end_lng = -87.648832371179864
+where end_station_name = &#x27;Green St &amp; Madison Ave*&#x27; and end_lat != 0.0 and end_lng != 0.0;</code></pre><p id="fd51cdb5-ba93-41b4-b1a6-66101f059821" class="">Check for min and max values for the end latitude</p><pre id="a2f8f4fe-f594-4901-8f53-578ed319bf8f" class="code"><code>select
+min(end_lat) as min_start_lat,
+max(end_lat) as max_start_lat
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022</code></pre><p id="0fd1e712-06f4-4314-b542-36853003b3c0" class="">Result:</p><pre id="f751c638-e810-48de-a679-7e7b5735f6f8" class="code"><code>min_start_lat: 0.0
+max_start_lat: 42.37</code></pre><p id="da56c32d-3897-4424-b804-0f3988af27f3" class="">Comment: We know that there are 8 records which have 0.0 value, we have flagged this up for action: update with average GPS values in R Studio. Let us check the range without the 0.0 values:</p><pre id="85aabe90-b10d-4b72-896a-2ab955a0e2af" class="code"><code>select
+min(end_lat) as min_end_lat,
+max(end_lat) as max_end_lat
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where end_lat is not null and end_lat != 0.0 and end_lng != 0.0;</code></pre><p id="628de5e4-f5e8-4204-a8c1-4615c3b8b569" class="">Result:</p><pre id="02c01037-6e6a-42c1-b7b1-382a23fd0d22" class="code"><code>min_end_lat: 41.55
+max_end_lat: 42.37</code></pre><p id="5f61e957-562d-42e1-99f5-ff2d619e1dd0" class="">Comments: These values are correctly within the GPS coordinates for Chicargo state.</p><h3 id="c453a43c-cfa6-4d16-949a-e0dd1752206f" class="block-color-teal_background">Field: end_lng (float)</h3><p id="b412bc88-8aef-4005-aebd-d9c71165426a" class="">We perform the same validation queries as we did for end_lat</p><p id="258341aa-7266-4605-abdc-a59d09b10366" class="">Check for nulls:</p><pre id="be62dc47-5b3b-4f00-8e54-b59a1237c05e" class="code"><code>select count(*)
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where end_lng is NULL;</code></pre><p id="a8c01046-331a-4c6e-a961-856721a6ea9b" class="">Result: 5858 records</p><p id="cf56b157-e170-4b9a-bfce-3ba0e0ee6cb3" class="">Comments: These records match the ones we found for end_lat. They also have missing end station names and end station GPS coordinates which means they would have to be removed. We cannot delete these records for now, but we can perform a query that will filter out these results and save those remaining records into a table which we can export to CSV via Google Cloud then perform processing and analysis in R Studio.</p><p id="7802c137-906d-45f6-98a2-5a3998aa3f5e" class="">Check for min and max longitudal range. The results should be between -180 to 180 degrees</p><pre id="79017e87-ca94-461a-978c-7828c224a3e3" class="code"><code>select
+min(end_lng) as min_end_lng,
+max(end_lng) as max_end_lng
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where end_lng is not null and end_lng != 0.0 and end_lng != 0.0;</code></pre><p id="6e3cb2fc-1242-4336-96ff-599f311e1d3f" class="">Result:</p><pre id="99a84210-3cb0-4234-b6be-e7fb86cbc4a7" class="code"><code>min_end_lng:-88.14
+max_end_lng:-87.3</code></pre><p id="5208dba2-d84c-4351-88ba-53263e7e580f" class="">Comments: These values are correctly within the GPS coordinates of Chicago.</p><h3 id="62acf664-683f-474f-a0dd-71aa266e2fc3" class="block-color-teal_background">Field: member_casual (STRING)</h3><p id="6a8017d6-e754-43dd-857b-030610ccb4b3" class="">This is a binary value, i.e. it can be either “member” or “casual”. </p><p id="296a47ac-4565-43ed-b315-d0bb098dc621" class="">Check for any missing (NULL) values </p><pre id="5acb61f2-2b03-46d6-be89-f52046685674" class="code"><code>select *
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where member_casual is NULL;</code></pre><p id="61f22024-bb4d-4700-8f72-f9f763074ecf" class="">Result : None</p><p id="e23eff5a-ab42-4bab-b084-7e307e33f962" class="">Check for white spaces or extra characters</p><pre id="2701399a-3b08-4161-9d55-36e05394c5aa" class="code"><code>select distinct member_casual
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022</code></pre><p id="723cbea1-dd0b-497a-98f1-713f5a19aa92" class="">Result:</p><pre id="ee201ef0-f50e-4e96-b54b-735edcec0677" class="code"><code>member	
+casual</code></pre><p id="4174aa94-449b-4e39-a935-2d0123ba6eab" class="">comments: no white spaces present, and no extra characters or other values</p><h2 id="2992559a-2bfe-4651-a9ae-cf2a0aa01f9d" class="block-color-orange_background">Data integrity and credibility summary</h2><ol type="1" id="37c0f2d9-7a66-4b82-be55-c390916cfc65" class="numbered-list" start="1"><li>8 records with GPS coordinates missing for the end station Green St &amp; Madison Ave* will be kept with the exported table. We can fill these end GPS coordinates with the average GPS values for this end station in R Studio. They cannot be performed here due to limitation of the free licence.</li></ol><ol type="1" id="ef803dcb-5729-4145-a53b-3a957b5130b6" class="numbered-list" start="2"><li>5858 records with end station information missing (name, id, GPS coordinates) will need to be filtered out.</li></ol><ol type="1" id="301db629-b044-4990-baf3-2453f351da44" class="numbered-list" start="3"><li>Missing records. There is on average 15% of the station name and ids missing (see below). The GPS coordinates are however present and it may be possible from the cleaning process to identify the average GPS coordinates for the stations and match them with the GPS coordinates of the missing records to fill those values. <p id="839d9f74-0874-426a-a9d5-95b62ac307da" class="">
+</p><table id="507143e9-df15-4e60-8436-5a1a96be844a" class="simple-table"><tbody><tr id="b7029c92-d2a3-447a-9407-8b3c59ff92a9"><td id="p:\?" class="" style="width:232.66666666666666px"><strong>Field</strong></td><td id="H[u:" class="" style="width:232.66666666666666px"><strong>Missing Records</strong></td><td id="esN]" class="" style="width:232.66666666666666px"><strong>% of dataset</strong></td></tr><tr id="487b105c-b9aa-4714-93d2-d7723de1694f"><td id="p:\?" class="" style="width:232.66666666666666px">start_station_name</td><td id="H[u:" class="" style="width:232.66666666666666px">833064</td><td id="esN]" class="" style="width:232.66666666666666px">14.70 </td></tr><tr id="d537ad16-91fc-439b-8b1d-6c9f3cbb085e"><td id="p:\?" class="" style="width:232.66666666666666px">start_station_id</td><td id="H[u:" class="" style="width:232.66666666666666px">833064</td><td id="esN]" class="" style="width:232.66666666666666px">14.70 </td></tr><tr id="471b4591-415f-4089-8fdd-bb3089ed4515"><td id="p:\?" class="" style="width:232.66666666666666px">end_station_name</td><td id="H[u:" class="" style="width:232.66666666666666px">892742</td><td id="esN]" class="" style="width:232.66666666666666px">15.75 </td></tr><tr id="719724b3-4215-4cb0-a2d1-f46762c6e0ea"><td id="p:\?" class="" style="width:232.66666666666666px">end_station_id</td><td id="H[u:" class="" style="width:232.66666666666666px">892742</td><td id="esN]" class="" style="width:232.66666666666666px">15.75</td></tr></tbody></table><p id="c821ca01-a488-4ca8-acae-8d8979665d68" class="">
+</p><p id="3865df25-6aeb-47aa-8338-edfd6c7d1fde" class="">The missing values does not prevent us from carrying out the analysis as we have the GPS coordinates to rely on if geometrical data is required.</p></li></ol><ol type="1" id="61ab94d3-ebc5-406e-86a4-a9b56fb62482" class="numbered-list" start="4"><li>The other metrics in the dataset appear to be clean and have passed the validation tests.</li></ol><h2 id="f0e565ed-fcfb-4674-a05c-eb9075398790" class="block-color-yellow_background">Report <strong>Conclusion</strong></h2><p id="adfd79cc-854a-4ab0-95c8-eee67310abc9" class="">The data is dirty and requires cleaning. There are a number of actions in the cleaning process to carry out which i will outline in the process phase of the analysis.</p><p id="e59e08be-dcdf-41bd-a1a6-3bf1af1339cd" class="">Given the above, we will use the following query to export the results into a new table labelled : trip_pre_clean_2022</p><p id="04fbf7ef-7aa7-432e-99eb-40d6fdcbb62e" class="">Query:</p><h3 id="c47ed470-cf57-46ed-b135-453f4f4fb09d" class="block-color-teal_background">Export the pre-cleaned dataset</h3><pre id="0860e0a0-7fb6-4573-8d45-c7429e6b90a1" class="code"><code>select *
+from `my-project-1-359120.cyclistic_trip_data.trip_raw_2022`
+where 
+	end_station_name is not null and
+	end_station_id is not null and
+	end_lat is not null and
+	end_lng is not null;</code></pre><p id="0ca540d7-5e74-4a79-9a70-a945b1e737c1" class="">Result: 4774975 records written. This is incorrect. </p><p id="671f79d9-f67f-4503-82cf-f7be1fa27d2f" class="">5858 records have been removed., instead  892742 (5667717 - 4774975) have been removed which is incorrect. </p><p id="dfa009f6-09b1-4e06-a464-5ae744a5029c" class="">I modified the where statement by excluding the end_station_id and end_station_name nulls which then made the query as follows:</p><pre id="e9947e1a-f35c-4409-a91c-ac002b3e0ec0" class="code"><code>select *
+from my-project-1-359120.cyclistic_trip_data.trip_raw_2022
+where end_lng is not null
+and end_lat is not null;</code></pre><p id="a0b0f342-78cd-489b-b94e-568a29697962" class="">Result: 5661859 records written - which is correct because 5667717 - 5661859 = 5858 records.</p><p id="326ba79b-e0da-4a20-a063-e955d948aece" class="">end of data integrity report</p></div></article></body></html>
