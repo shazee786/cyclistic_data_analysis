@@ -1,0 +1,138 @@
+Cyclistic Trip Dataset Change Log
+=================================
+
+[UPDATE][AVAES SHAH][05/02/2023][1300][Upload raw data into BigQuery]
+
+The raw dataset is divided into 12 CSV files (zipped), each file represents one month's worth of cycle trip data. To conduct the pre-cleaning process I have uploaded the 12 CSV files into a BigQuery dataset as follows:
+
+BigQuery Dataset Name : cyclistic_trip_data 
+BigQuery Dataset ID : my-project-1-359120.cyclistic_trip_data
+
+The following CSV files have been uploaded to the BigQuery dataset:
+
+05/02/2023  15:31        19,011,955 202201-divvy-tripdata.csv
+05/02/2023  15:30        21,132,516 202202-divvy-tripdata.csv
+05/02/2023  15:30        51,745,473 202203-divvy-tripdata.csv
+05/02/2023  15:30        66,909,087 202204-divvy-tripdata.csv
+05/02/2023  15:30       117,534,432 202205-divvy-tripdata.csv
+05/02/2023  15:29       143,592,643 202206-divvy-tripdata.csv
+05/02/2023  15:29       152,888,753 202207-divvy-tripdata.csv
+05/02/2023  15:29       145,559,436 202208-divvy-tripdata.csv
+05/02/2023  15:29       141,449,526 202209-divvy-tripdata.csv
+05/02/2023  15:28       111,915,287 202210-divvy-tripdata.csv
+05/02/2023  15:28        67,939,634 202211-divvy-tripdata.csv
+05/02/2023  15:28        36,466,595 202212-divvy-tripdata.csv
+
+I have created a seperate table for each month labelled as follows:
+
+trip_raw_jan_2022
+trip_raw_feb_2022
+trip_raw_mar_2022
+...
+trip_raw_dec_2022
+
+
+[UPDATE][AVAES SHAH][07/02/2023][1000][Aggregating dataset into one table]
+
+There currently is a table for each month, which would be time consuming to clean. By combining the 12 tables into one large table would significantly reduce the time taken to clean the datset.
+
+QUERY :
+
+
+select *
+from `my-project-1-359120.cyclistic_trip_data.trip_raw_jan_2022`
+
+union all
+
+select *
+from `my-project-1-359120.cyclistic_trip_data.trip_raw_feb_2022`
+
+union all
+
+... for all tables ...
+
+select *
+from `my-project-1-359120.cyclistic_trip_data.trip_raw_dec_2022`
+
+After running the query we save the results into a fresh new table labelled trip_raw_2022 upon which we will conduct our cleaning operations.
+
+size of the combined table: 5667717 records
+
+
+[REMOVED][AVAES SHAH][14/02/2023][2100][Removal of records with missing data]
+
+5858 records with end station information missing (name, id, GPS coordinates) have been removed. Full details are in the pre-cleaning report.
+
+[CHANGED][AVAES SHAH][20/02/2023][1000][Data exported to R Studio]
+
+The dataset has been exported in CSV format to Google Drive (due to large size - 1 GB) and imported into R Studio a data frame for the remainder of the cleaning process.
+
+[UPDATED][AVAES SHAH][14/02/2023][2100][Incorrect GPS coordinates corrected]
+
+8 records have the incorrect end station GPS coordinates recorded (0.0) The correct GPS coordinates have beeb updated in R Studio. Full report is avaiable in the R Markdown document.
+
+[UPDATE][AVAES SHAH][25/02/2023][1523][Missing end and start station names and ids]
+
+A query in R has revealed:
+
+1. 833,064 missing start station names and corresponding ids
+2. 886,884 missing end station names and corresponding ids
+
+However their GPS coordinates are present.
+
+I attempted to replace the missing station names and ids but the method failed.
+
+The method: obtain a list of station names and ids and their average GPS coordinates. However, when i examined this list of station names, I found that two different stations would have the same GPS coordinates, because the averaging GPS coordinates rounded up to the 2 decimal places. I could not use this reference data for this reason.
+
+I will proceed with the analysis leaving the missing station names present.
+
+
+[ADDED][AVAES SHAH][26/02/2023][0026][Calculated + other columns added]
+
+
+The following calculated columns have been added for the analysis phase:
+
+* **route** [string] - this is the route taken from the start station to the end station
+* **start_time** [difftime] - this is the time component in hh:mm:ss format for the started_at datetime object
+* **end_time** [difftime] - same as above but for the ended_at datetime object
+* **trip_dur_min**[numeric] - time difference in minutes (ended_at - started_at)  
+* **trip_dur_sec**[numeric] - time difference in seconds (ended_at - started_at)  
+* **weekday** [ordered] - the weekday the bike was hired derived from the started_at variable
+* **month** [ordered] - the month in which the bike was hired derived from the started_at variable
+* **year** [ordered] - the year in which the bike was hired derived from the started_at variable
+* **date** [ordered] - the date when the bike was hired derived from the started_at variable
+* **stn_dist_km** [km - double] - this is the distance between the start and end station "as the crow flies"
+
+[REMOVED][AVAES SHAH][05/03/2023][0001][Cyclistic Quality Control Records Removed from Data Frame]
+
+100 records have been reoved which either had a negative trip duration or a start station name of "HQ QR". These are bikes that have been taken from their dock for quality control checks.
+The new data frame: trip_df_v2
+
+[UPDATE][AVAES SHAH][05/03/2023][0601][Cleaned data is exported to CSV]
+
+The cleaned data is now ready for analysis in R Studio and Tableau. The dataset is labeled cyclistic_clean_trip_2022.CSV and resides in the CAPSTONE directory.
+
+[TRIMMED][AVAES SHAH][06/03/2023][1200][Dataset trimmed down for analysis]
+
+The cyclistic_clean_trip_2022.CSV has been trimmed down to the following columns for analysis:
+
+- bike_type
+- route
+- start_time
+- end_time
+- trip_dur_sec
+- start_hour
+- weekday
+- month
+- year
+- date
+- stn_dist_km
+- user_type 
+
+and saved to a dataframe labeled: trim_df
+
+[OUTLIER VERFICATION][AVAES SHAH][12/03/2023][1200][Dataset trimmed down for analysis]
+
+A record with the maximum trip duration of 2061244 seconds has been identified.
+
+I do not have the record's ride_id but it can easily be found. It needs to be checked for validity.
